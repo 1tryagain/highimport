@@ -1,14 +1,17 @@
 package com.juc.threadandjuc2;
 
 import com.juc.threadandjuc2.entity.Order;
-import com.juc.threadandjuc2.entity.User;
+import com.juc.threadandjuc2.entity.OrderVo;
 import com.juc.threadandjuc2.mapper.OrderMapper;
 import com.juc.threadandjuc2.mapper.UserMapper;
 import com.juc.threadandjuc2.timer.FutureTask1;
-import org.apache.shardingsphere.infra.hint.HintManager;
+import com.juc.threadandjuc2.timer.OrderItemFutureTask;
+import org.apache.calcite.linq4j.OrderedQueryable;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 /**
  * @author liu
@@ -24,7 +27,8 @@ class test {
     private OrderMapper orderMapper;
     @Autowired
     private FutureTask1 futureTask1;
-
+    @Autowired
+    private OrderItemFutureTask orderItemFutureTask;
     /**
      * 写入数据的测试
      */
@@ -39,26 +43,13 @@ class test {
         futureTask1.highimport2();
     }
     @Test
-    public void testInsert(){
-
-        User user = new User();
-        user.setUname("张三");
-        userMapper.insert(user);
+    public void testOrderItemInsert() throws InterruptedException {
+        List<Order> list = orderMapper.selectList(null);
+        orderItemFutureTask.highimportOrderItem(list);
     }
     @Test
-    public void testSelect(){
-        User user = userMapper.selectById(2);
-        User user1 = userMapper.selectById(2);
-        User user2 = userMapper.selectById(2);
-        System.out.println(user.getUname());
-        System.out.println(user1.getUname());
-        System.out.println(user2.getUname());
-    }
-
-    @Test
-    public void testSelectFromOrderAndUser(){
-        User user = userMapper.selectById(1L);
-        Order order = orderMapper.selectById(1L);
+    public void testOrderVo() {
+        orderMapper.updateOrderAmount();
     }
 
 }

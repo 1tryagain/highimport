@@ -2,7 +2,9 @@ package com.juc.threadandjuc2;
 
 import com.juc.threadandjuc2.entity.Dict;
 import com.juc.threadandjuc2.entity.Order;
+import com.juc.threadandjuc2.entity.OrderItem;
 import com.juc.threadandjuc2.mapper.DictMapper;
+import com.juc.threadandjuc2.mapper.OrderItemMapper;
 import com.juc.threadandjuc2.mapper.OrderMapper;
 import org.apache.shardingsphere.infra.hint.HintManager;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,8 @@ public class shardingTest {
     private OrderMapper orderMapper;
     @Autowired
     private DictMapper dictMapper;
+    @Autowired
+    private OrderItemMapper orderItemMapper;
     @Test
     public void testInsertOrder(){
 
@@ -101,5 +105,44 @@ public class shardingTest {
             orderMapper.insert(order);
         }
         hintManager.close();
+    }
+
+    @Test
+    public void testInsertOrderAndOrderItem(){
+
+        for (long i = 1; i < 3; i++) {
+
+            Order order = new Order();
+            order.setOrderNo("ATGUIGU" + i);
+            order.setUserId(1L);
+            orderMapper.insert(order);
+
+            for (long j = 1; j < 3; j++) {
+                OrderItem orderItem = new OrderItem();
+                orderItem.setOrderNo("ATGUIGU" + i);
+                orderItem.setUserId(1L);
+                orderItem.setPrice(new BigDecimal(10));
+                orderItem.setCount(2);
+                orderItemMapper.insert(orderItem);
+            }
+        }
+
+        for (long i = 5; i < 7; i++) {
+
+            Order order = new Order();
+            order.setOrderNo("ATGUIGU" + i);
+            order.setUserId(2L);
+            orderMapper.insert(order);
+
+            for (long j = 1; j < 3; j++) {
+                OrderItem orderItem = new OrderItem();
+                orderItem.setOrderNo("ATGUIGU" + i);
+                orderItem.setUserId(2L);
+                orderItem.setPrice(new BigDecimal(1));
+                orderItem.setCount(3);
+                orderItemMapper.insert(orderItem);
+            }
+        }
+
     }
 }

@@ -13,6 +13,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * @author liu
  * @create 2023-09-29-19:49
+ * 强制路由
  */
 public class OrderFuture2 implements Callable<Integer> {
 
